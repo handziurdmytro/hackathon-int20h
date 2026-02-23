@@ -1,0 +1,2 @@
+- add .gitignore
+- add to .gitignore python garbage
