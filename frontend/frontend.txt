@@ -1,0 +1,3 @@
+- add .gitignore
+- add to .gitignore frontend garbage
+- delete this file
