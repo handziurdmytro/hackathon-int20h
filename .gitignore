@@ -1,0 +1,41 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
+
+# Pytest
+.pytest_cache/
+
+# Environment variables
+.env
+.env.local
+
+# Python virtual environments (if created inside this directory)
+env/
+ENV/
+.venv/
+
+# Rust build artifacts
+/target/
+
+# Editor/IDE settings
+.idea/
+.vscode/
+
+# Python tooling caches/coverage
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
