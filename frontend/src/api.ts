@@ -1,17 +1,24 @@
 import axios from 'axios';
+import type { Order } from './types';
 
 const API_URL = 'http://localhost:8000';
 
 export const api = {
   uploadCsv: (file: File) => {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('csv_file', file); // Ключ має бути 'csv_file' як у main.py
     return axios.post(`${API_URL}/orders/import`, formData);
   },
 
-  getOrders: (page: number = 1) => 
-    axios.get(`${API_URL}/orders?page=${page}`),
+  getOrders: () => axios.get<Order[]>(`${API_URL}/orders`),
 
-  createOrder: (data: { lat: number; lon: number; subtotal: number }) =>
-    axios.post(`${API_URL}/orders`, data),
+  createOrder: (data: { latitude: number; longitude: number; subtotal: number }) => {
+    // Створюємо об'єкт, що відповідає Pydantic моделі Order
+    const payload = {
+      ...data,
+      id: Math.floor(Math.random() * 100000), // Тимчасовий ID для валідації
+      timestamp: new Date().toISOString()
+    };
+    return axios.post(`${API_URL}/orders`, payload);
+  },
 };
