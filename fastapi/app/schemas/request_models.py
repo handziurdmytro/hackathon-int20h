@@ -1,4 +1,4 @@
-from fastapi import UploadFile
+# Models for https requests, how they are supposed to look
 from pydantic import BaseModel, Field
 
 
@@ -9,6 +9,7 @@ class Order(BaseModel):
     subtotal: float = Field(gt=0.0)
     timestamp: str #TODO валідація формату дати та часу
 
-class CsvFileWithOrders(BaseModel):
-    csv_file: UploadFile
-    encoding: str = "utf-8"
+class TaxRequest(BaseModel):
+    longitude: float
+    latitude: float
+    subtotal: float
