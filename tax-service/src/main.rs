@@ -33,7 +33,6 @@ async fn main() {
         .route("/tax", post(handle_task))
         .with_state(shared_state);
 
-    /*TODO: add port to config files*/
     let port = 3030u16;
 
     let listener = tokio::net::TcpListener::bind(format!("127.0.0.1:{port}"))
@@ -55,8 +54,8 @@ async fn handle_task(
     Ok((
         StatusCode::OK,
         Json(tax::calculate_tax(
-            payload.latitude,
             payload.longitude,
+            payload.latitude,
             payload.subtotal,
             &app_state,
         )?),
