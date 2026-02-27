@@ -31,6 +31,7 @@ async fn main() {
     let app = Router::new()
         .route("/", get(root))
         .route("/tax", post(handle_task))
+        .route("/taxes", post(handle_multiple_tasks))
         .with_state(shared_state);
 
     let port = 3030u16;
@@ -62,12 +63,44 @@ async fn handle_task(
     ))
 }
 
+async fn handle_multiple_tasks(
+    State(app_state): State<AppState>,
+    Json(payload): Json<OrderBatch>,
+) -> Result<(StatusCode, Json<TaxedOrderBatch>), StatusCode> {
+    let mut taxes: Vec<TaxedOrder> = Vec::new();
+
+    for order in payload.orders{
+        taxes.push(tax::calculate_tax(
+            order.longitude,
+            order.latitude,
+            order.subtotal,
+            &app_state,
+        )?)
+    }
+
+    Ok((
+        StatusCode::OK,
+        Json(TaxedOrderBatch{taxes}),
+    ))
+}
+
 #[derive(Deserialize, Debug)]
 struct Order {
     latitude: f64,
     longitude: f64,
     subtotal: f64,
 }
+
+#[derive(Deserialize, Debug)]
+struct OrderBatch {
+    orders: Vec<Order>,
+}
+
+#[derive(Serialize, Debug)]
+struct TaxedOrderBatch {
+    taxes: Vec<TaxedOrder>,
+}
+
 #[derive(Debug, Clone)]
 struct AppState {
     pub state: Arc<Location>,
