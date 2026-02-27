@@ -2,12 +2,14 @@ mod geo;
 mod geometry;
 mod tax;
 
-use crate::geo::{parse_all_data, Location};
-use crate::tax::{parse_csv, TaxRateRecord, TaxedOrder};
+use crate::geo::{Location, parse_all_data};
+use crate::tax::{TaxRateRecord, TaxedOrder, parse_csv};
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::routing::{get, post};
 use axum::{Json, Router};
+use rayon::iter::ParallelIterator;
+use rayon::prelude::IntoParallelRefIterator;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -67,21 +69,16 @@ async fn handle_multiple_tasks(
     State(app_state): State<AppState>,
     Json(payload): Json<OrderBatch>,
 ) -> Result<(StatusCode, Json<TaxedOrderBatch>), StatusCode> {
-    let mut taxes: Vec<TaxedOrder> = Vec::new();
+    let taxes: Vec<TaxedOrder> = payload
+        .orders
+        .par_iter()
+        .map(|order| {
+            tax::calculate_tax(order.longitude, order.latitude, order.subtotal, &app_state)
+                .unwrap_or_else(|_| TaxedOrder::empty_error(order.latitude, order.longitude))
+        })
+        .collect();
 
-    for order in payload.orders{
-        taxes.push(tax::calculate_tax(
-            order.longitude,
-            order.latitude,
-            order.subtotal,
-            &app_state,
-        )?)
-    }
-
-    Ok((
-        StatusCode::OK,
-        Json(TaxedOrderBatch{taxes}),
-    ))
+    Ok((StatusCode::OK, Json(TaxedOrderBatch { taxes })))
 }
 
 #[derive(Deserialize, Debug)]
