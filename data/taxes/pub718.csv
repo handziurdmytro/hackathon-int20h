@@ -1,60 +1,86 @@
-County_or_Locality,Tax_Rate,Reporting_Code,is_special
-New York State only,4,0021,false
-Albany,8,0181,false
-Allegany,8.5,0221,false
-Broome,8,0321,false
-Cattaraugus,8,0481,false
-Cayuga,8,0511,false
-Chautauqua,8,0651,false
-Chemung,8,0711,false
-Chenango,8,0861,false
-Clinton,8,0921,false
-Columbia,8,1021,false
-Cortland,8,1131,false
-Delaware,8,1221,false
-Dutchess,8.125,1311,true
-Erie,8.75,1451,false
-Essex,8,1521,false
-Franklin,8,1621,false
-Fulton,8,1791,false
-Genesee,8,1811,false
-Greene,8,1911,false
-Hamilton,8,2011,false
-Herkimer,8.25,2121,false
-Jefferson,8,2221,false
-Lewis,8,2321,false
-Livingston,8,2411,false
-Madison,8,2511,false
-Monroe,8,2611,false
-Montgomery,8,2781,false
-Nassau,8.625,2811,true
-New York City,8.875,8081,true
-Niagara,8,2911,false
-Oneida,8.75,3010,false
-Onondaga,8,3121,false
-Ontario,7.5,3211,false
-Orange,8.125,3321,true
-Orleans,8,3481,false
-Oswego,8,3501,false
-Otsego,8,3621,false
-Putnam,8.375,3731,true
-Rensselaer,8,3881,false
-Rockland,8.375,3921,true
-St. Lawrence,8,4091,false
-Saratoga,7,4111,false
-Schenectady,8,4241,false
-Schoharie,8,4321,false
-Schuyler,8,4411,false
-Seneca,8,4511,false
-Steuben,8,4691,false
-Suffolk,8.75,4711,true
-Sullivan,8,4821,false
-Tioga,8,4921,false
-Tompkins,8,5081,false
-Ulster,8,5111,false
-Warren,7,5281,false
-Washington,7,5311,false
-Wayne,8,5421,false
-Westchester,8.375,5581,true
-Wyoming,8,5621,false
-Yates,8,5721,false
+locality,tax_rate,reporting_code,is_special
+new york state only,4.0,0021,false
+albany,8.0,0181,false
+allegany,8.5,0221,false
+bronx,8.875,8081,true
+kings,8.875,8081,true
+new york city,8.875,8081,true
+new york,8.875,8081,true
+queens,8.875,8081,true
+richmond,8.875,8081,true
+brooklyn,8.875,8081,true
+manhattan,8.875,8081,true
+staten island,8.875,8081,true
+broome,8.0,0321,false
+cattaraugus,8.0,0481,false
+olean,8.0,0441,false
+salamanca,8.0,0431,false
+cayuga,8.0,0511,false
+auburn,8.0,0561,false
+chautauqua,8.0,0651,false
+chemung,8.0,0711,false
+chenango,8.0,0861,false
+norwich,8.0,0831,false
+clinton,8.0,0921,false
+columbia,8.0,1021,false
+cortland,8.0,1131,false
+delaware,8.0,1221,false
+dutchess,8.125,1311,true
+erie,8.75,1451,false
+essex,8.0,1521,false
+franklin,8.0,1621,false
+fulton,8.0,1791,false
+gloversville,8.0,1741,false
+johnstown,8.0,1751,false
+genesee,8.0,1811,false
+greene,8.0,1911,false
+hamilton,8.0,2011,false
+herkimer,8.25,2121,false
+jefferson,8.0,2221,false
+lewis,8.0,2321,false
+livingston,8.0,2411,false
+madison,8.0,2511,false
+oneida city,8.0,2541,false
+monroe,8.0,2611,false
+montgomery,8.0,2781,false
+nassau,8.625,2811,true
+niagara,8.0,2911,false
+oneida,8.75,3010,false
+rome,8.125,3015,false
+utica,8.75,3018,false
+onondaga,8.0,3121,false
+ontario,7.5,3211,false
+orange,8.125,3321,true
+orleans,8.0,3481,false
+oswego,8.0,3501,false
+oswego city,8.0,3561,false
+otsego,8.0,3621,false
+putnam,8.375,3731,true
+rensselaer,8.0,3881,false
+rockland,8.375,3921,true
+st. lawrence,8.0,4091,false
+ogdensburg,8.0,4012,false
+saratoga,7.0,4111,false
+saratoga springs,7.0,4131,false
+schenectady,8.0,4241,false
+schoharie,8.0,4321,false
+schuyler,8.0,4411,false
+seneca,8.0,4511,false
+steuben,8.0,4691,false
+suffolk,8.625,4711,true
+sullivan,8.0,4821,false
+tioga,8.0,4921,false
+tompkins,8.0,5081,false
+ithaca,8.0,5021,false
+ulster,8.0,5111,false
+warren,7.0,5281,false
+glens falls,7.0,5211,false
+washington,7.0,5311,false
+wayne,8.0,5421,false
+westchester,8.375,5581,true
+mount vernon,8.375,5521,true
+new rochelle,8.375,6861,true
+white plains,8.375,6513,true
+yonkers,8.875,6511,true
+wyoming,8.0,5621,false
+yates,8.0,5721,false
