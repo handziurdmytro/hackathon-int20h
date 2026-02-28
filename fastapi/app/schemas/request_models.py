@@ -1,14 +1,16 @@
 # Models for https requests, how they are supposed to look
+from typing import Optional
+
 from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
 
 
 class Order(BaseModel):
-    id: int = Field(gt=0, description="Unique order ID")
+    id: Optional[int] = None
     longitude: float = Field(ge=-180.0, le=180.0)
     latitude: float = Field(ge=-90.0, le=90.0)
     subtotal: float = Field(gt=0.0)
-    timestamp: str
+    timestamp: str = Field(default_factory=lambda: datetime.now().isoformat())
 
     @field_validator('timestamp')
     @classmethod
@@ -21,6 +23,6 @@ class Order(BaseModel):
 
 
 class TaxRequest(BaseModel):
-    longitude: float
     latitude: float
+    longitude: float
     subtotal: float

@@ -1,9 +1,12 @@
 import json
+import os
 
 from fastapi import FastAPI, UploadFile, Request
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
+from starlette.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from schemas.request_models import Order
 from services.orders import process_order, import_csv
 
@@ -11,11 +14,13 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -34,6 +39,7 @@ async def list_orders():
 @app.post("/orders")
 async def create_order_from_json(order: Order):
     response = await process_order(order)
+
     return {"message": response.model_dump_json()}
 
 @app.post("/orders/import")
@@ -42,3 +48,11 @@ async def import_orders_from_csv(csv_file : UploadFile, encoding: str = "utf-8")
     await import_csv(csv_file, encoding)
 
     return {"message": "Orders imported"}
+
+@app.get("/main")
+async def get_page():
+    html_file_path = os.path.join("static", "index.html")
+    with open(html_file_path, "r", encoding="utf-8") as f:
+        html_content = f.read()
+
+    return HTMLResponse(content=html_content)

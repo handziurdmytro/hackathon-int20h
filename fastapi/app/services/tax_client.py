@@ -1,11 +1,9 @@
-import json
-
 from pydantic import ValidationError
 from urllib3.exceptions import RequestError
-
 from schemas.request_models import TaxRequest
 from schemas.response_models import TaxServiceResponse
 import httpx
+
 
 class TaxServiceClient:
 
@@ -19,7 +17,7 @@ class TaxServiceClient:
         try:
             response = await self._http_client.post("/tax", json=request_data.model_dump(), timeout=timeout)
 
-            response.raise_for_status() # Якщо статус код не 2xx, викликає виняток і ми його ловим
+            response.raise_for_status()
 
             return TaxServiceResponse(**response.json())
         except httpx.HTTPStatusError as e:
@@ -32,6 +30,25 @@ class TaxServiceClient:
             print(f"Validation pydantic error: {e}")
             raise
 
+    async def get_tax_responses(self,
+                                requests : list[TaxRequest],
+                                timeout : float = 5.0) -> list[TaxServiceResponse]:
+        try:
+            response = await self._http_client.post("/taxes", json={"orders": [req.model_dump() for req in requests]}, timeout=timeout)
+
+            response.raise_for_status()
+
+            data = response.json()
+            return [TaxServiceResponse(**item) for item in data["taxes"]]
+        except httpx.HTTPStatusError as e:
+            print(f"HTTP error: {e.response.status_code} {e.response.text}")
+            raise
+        except RequestError as e:
+            print(f"Request error: {e}")
+            raise
+        except ValidationError as e:
+            print(f"Validation pydantic error: {e}")
+            raise
 
     async def close(self):
         await self._http_client.aclose()
