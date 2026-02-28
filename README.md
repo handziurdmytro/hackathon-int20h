@@ -38,5 +38,3 @@ cd fastapi/app && uvicorn main:app --reload
 Запуск Tax Service (Rust) 
 
 cd tax-service/ && cargo run --release
-
-```bash
