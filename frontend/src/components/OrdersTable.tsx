@@ -28,9 +28,9 @@ export const OrdersTable = ({ orders, isLoading }: Props) => (
               <tr key={o.id ?? index} className="orders-table__row">
                 <td className="orders-table__cell">{o.id ?? 'N/A'}</td>
                 <td className="orders-table__cell">
-                  {o.latitude.toFixed(3)}, {o.longitude.toFixed(3)}
+                  {(o.latitude ?? 0).toFixed(3)}, {(o.longitude ?? 0).toFixed(3)}
                 </td>
-                <td className="orders-table__cell">${o.subtotal.toFixed(2)}</td>
+                <td className="orders-table__cell">${(o.subtotal ?? 0).toFixed(2)}</td>
                 <td className="orders-table__cell">
                   {((o.composite_tax_rate ?? 0) * 100).toFixed(2)}%
                 </td>
@@ -42,9 +42,9 @@ export const OrdersTable = ({ orders, isLoading }: Props) => (
                 </td>
                 <td className="orders-table__cell">
                   <small>
-                    {o.breakdown?.jurisdictions.join(", ")}<br />
-                    {o.breakdown?.state_rate} / {o.breakdown?.county_rate} /
-                    {o.breakdown?.city_rate} / {o.breakdown?.special_rates}
+                    {o.breakdown?.jurisdictions?.join(", ")}<br />
+                    {o.breakdown?.state_rate ?? 0} / {o.breakdown?.county_rate ?? 0} /
+                    {o.breakdown?.city_rate ?? 0} / {o.breakdown?.special_rates ?? 0}
                   </small>
                 </td>
               </tr>

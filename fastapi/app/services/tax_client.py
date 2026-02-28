@@ -1,5 +1,5 @@
+from httpx import RequestError
 from pydantic import ValidationError
-from urllib3.exceptions import RequestError
 from schemas.request_models import TaxRequest
 from schemas.response_models import TaxServiceResponse, GeoData
 import httpx
@@ -49,6 +49,17 @@ class TaxServiceClient:
             data = response.json()
             return [TaxServiceResponse(**item) for item in data["taxes"]]
         except httpx.HTTPStatusError as e:
+            if e.response.status_code == 422:
+                # Return default responses for all requests
+                return [
+                    TaxServiceResponse(
+                        composite_tax_rate=0.0,
+                        tax_amount=0.0,
+                        total_amount=req.subtotal,
+                        breakdown=GeoData(state_rate=0.0, county_rate=0.0, city_rate=0.0, special_rates=0.0),
+                        jurisdictions=["Outside New York State"]
+                    ) for req in requests
+                ]
             print(f"HTTP error: {e.response.status_code} {e.response.text}")
             raise
         except RequestError as e:

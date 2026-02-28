@@ -15,8 +15,8 @@ class TaxBreakdown(BaseModel):
 
 class Order(BaseModel):
     id: Optional[int] = None
-    longitude: float = Field(ge=-180.0, le=180.0)
-    latitude: float = Field(ge=-90.0, le=90.0)
+    longitude: float
+    latitude: float
     subtotal: float = Field(gt=0.0)
     timestamp: str = Field(default_factory=lambda: datetime.now().isoformat())
     composite_tax_rate: Optional[float] = None
