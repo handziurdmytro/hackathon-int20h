@@ -2,12 +2,14 @@ mod geo;
 mod geometry;
 mod tax;
 
-use crate::geo::{parse_all_data, Location};
-use crate::tax::{parse_csv, TaxRateRecord, TaxedOrder};
+use crate::geo::{Location, parse_all_data};
+use crate::tax::{TaxRateRecord, TaxedOrder, parse_csv};
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::routing::{get, post};
 use axum::{Json, Router};
+use rayon::iter::ParallelIterator;
+use rayon::prelude::IntoParallelRefIterator;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -31,6 +33,7 @@ async fn main() {
     let app = Router::new()
         .route("/", get(root))
         .route("/tax", post(handle_task))
+        .route("/taxes", post(handle_multiple_tasks))
         .with_state(shared_state);
 
     let port = 3030u16;
@@ -62,12 +65,39 @@ async fn handle_task(
     ))
 }
 
+async fn handle_multiple_tasks(
+    State(app_state): State<AppState>,
+    Json(payload): Json<OrderBatch>,
+) -> Result<(StatusCode, Json<TaxedOrderBatch>), StatusCode> {
+    let taxes: Vec<TaxedOrder> = payload
+        .orders
+        .par_iter()
+        .map(|order| {
+            tax::calculate_tax(order.longitude, order.latitude, order.subtotal, &app_state)
+                .unwrap_or_else(|_| TaxedOrder::empty_error(order.latitude, order.longitude))
+        })
+        .collect();
+
+    Ok((StatusCode::OK, Json(TaxedOrderBatch { taxes })))
+}
+
 #[derive(Deserialize, Debug)]
 struct Order {
     latitude: f64,
     longitude: f64,
     subtotal: f64,
 }
+
+#[derive(Deserialize, Debug)]
+struct OrderBatch {
+    orders: Vec<Order>,
+}
+
+#[derive(Serialize, Debug)]
+struct TaxedOrderBatch {
+    taxes: Vec<TaxedOrder>,
+}
+
 #[derive(Debug, Clone)]
 struct AppState {
     pub state: Arc<Location>,

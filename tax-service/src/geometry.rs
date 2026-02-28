@@ -1,5 +1,4 @@
 pub type Point = (f64, f64);
-pub type Polygon = Vec<Edge>;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Edge {
@@ -48,7 +47,7 @@ fn is_point_on_edge(x0: f64, y0: f64, x1: f64, y1: f64, x2: f64, y2: f64) -> boo
 mod tests{
     use super::*;
 
-    fn square_polygon() -> Polygon{
+    fn square_polygon() -> Vec<Edge>{
         vec![
             Edge::new((10.0, 10.0), (10.0, -10.0)),
             Edge::new((10.0, -10.0), (-10.0, -10.0)),

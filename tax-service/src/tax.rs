@@ -3,7 +3,7 @@ use crate::geo::{Jurisdiction, Location};
 use crate::geometry::{Point, is_in_polygon};
 use axum::http::StatusCode;
 use csv::Reader;
-use serde::{Deserialize, Deserializer, Serialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -11,7 +11,6 @@ use std::sync::Arc;
 pub struct TaxRateRecord {
     pub locality: String,
     pub tax_rate: f64,
-    pub reporting_code: String,
     pub is_special: bool,
 }
 
@@ -149,6 +148,23 @@ pub struct TaxedOrder {
     total_amount: f64,
     breakdown: TaxBreakdown,
     jurisdictions: Vec<String>,
+}
+
+impl TaxedOrder {
+    pub(crate) fn empty_error(lat: f64, lon: f64) -> Self {
+        Self {
+            composite_tax_rate: 0.0,
+            tax_amount: 0.0,
+            total_amount: 0.0,
+            breakdown: TaxBreakdown {
+                state_rate: 0.0,
+                county_rate: 0.0,
+                city_rate: 0.0,
+                special_rates: 0.0,
+            },
+            jurisdictions: vec![format!("[ERROR] Point ({lat}, {lon}) is outside the New York State")],
+        }
+    }
 }
 
 #[derive(Serialize, Debug)]
