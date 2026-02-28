@@ -10,21 +10,20 @@ class TaxBreakdown(BaseModel):
     county_rate: float
     city_rate: float
     special_rates: float
-    jurisdictions: list[str]
 
-
-class Order(BaseModel):
+class OrderCreate(BaseModel):
     id: Optional[int] = None
     longitude: float
     latitude: float
     subtotal: float = Field(gt=0.0)
-    timestamp: str = Field(default_factory=lambda: datetime.now().isoformat())
+    order_timestamp: str = Field(default_factory=lambda: datetime.now().isoformat())
     composite_tax_rate: Optional[float] = None
     tax_amount: Optional[float] = None
     total_amount: Optional[float] = None
     breakdown: Optional[TaxBreakdown] = None
+    jurisdictions: Optional[list[str]] = None
 
-    @field_validator('timestamp')
+    @field_validator('order_timestamp')
     @classmethod
     def validate_timestamp(cls, v):
         try:
