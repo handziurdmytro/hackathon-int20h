@@ -8,8 +8,8 @@ interface Props {
 
 export const OrderForm = ({ onOrderCreated }: Props) => {
   const [formData, setFormData] = useState({
-    latitude: 0,
     longitude: 0,
+    latitude: 0,
     subtotal: 0,
   });
 
@@ -17,8 +17,8 @@ export const OrderForm = ({ onOrderCreated }: Props) => {
     e.preventDefault();
     try {
       await api.createOrder({
-        latitude: formData.latitude,
         longitude: formData.longitude,
+        latitude: formData.latitude,
         subtotal: formData.subtotal,
       });
       onOrderCreated();

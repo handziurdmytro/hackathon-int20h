@@ -41,10 +41,9 @@ export const OrdersTable = ({ orders, isLoading }: Props) => (
                   <strong>${o.total_amount?.toFixed(2)}</strong>
                 </td>
                 <td className="orders-table__cell">
-                  <small title={o.breakdown?.jurisdictions}>
-                    {/* Використовуємо special_rate (однина) */}
+                  <small title={o.breakdown?.jurisdictions.join(", ")}>
                     {o.breakdown?.state_rate} / {o.breakdown?.county_rate} /
-                    {o.breakdown?.city_rate} / {o.breakdown?.special_rate}
+                    {o.breakdown?.city_rate} / {o.breakdown?.special_rates}
                   </small>
                 </td>
               </tr>
