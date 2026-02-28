@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Order } from './types';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = '';
 
 export const api = {
   uploadCsv: (file: File) => {

@@ -35,12 +35,19 @@ async def process_orders(orders : list[Order]):
 
 async def import_csv(csv_file: UploadFile, encoding: str = "utf-8"):
     orders = list()
+    responses = list()
 
     for row in stream_csv(csv_file, encoding):
         order = Order(**row)
         orders.append(order)
 
-        if orders.len > 1000:
-            for order in orders:
-                await process_orders(order)
+        if len(orders) >= 1000:
+            batch_responses = await process_orders(orders)
+            responses.extend(batch_responses)
             orders.clear()
+
+    if orders:
+        batch_responses = await process_orders(orders)
+        responses.extend(batch_responses)
+
+    return responses
