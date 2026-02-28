@@ -17,8 +17,8 @@ export const OrderForm = ({ onOrderCreated }: Props) => {
     e.preventDefault();
     try {
       await api.createOrder({
-        lat: formData.latitude,
-        lon: formData.longitude,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
         subtotal: formData.subtotal,
       });
       onOrderCreated();
