@@ -27,7 +27,7 @@ class TaxServiceClient:
                     tax_amount=0.0,
                     total_amount=request_data.subtotal,
                     breakdown=GeoData(state_rate=0.0, county_rate=0.0, city_rate=0.0, special_rates=0.0),
-                    jurisdictions=["Outside New York State"]
+                    jurisdictions=[f"[ERROR] Point ({request_data.latitude}, {request_data.longitude}) is outside the New York State"]
                 )
             print(f"HTTP error: {e.response.status_code} {e.response.text}")
             raise
@@ -50,7 +50,6 @@ class TaxServiceClient:
             return [TaxServiceResponse(**item) for item in data["taxes"]]
         except httpx.HTTPStatusError as e:
             if e.response.status_code == 422:
-                # Return default responses for all requests
                 return [
                     TaxServiceResponse(
                         composite_tax_rate=0.0,

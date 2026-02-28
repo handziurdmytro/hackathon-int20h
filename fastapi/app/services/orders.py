@@ -1,10 +1,10 @@
 from fastapi import UploadFile
-from schemas.request_models import Order, TaxRequest, TaxBreakdown
+from schemas.request_models import OrderCreate, TaxRequest, TaxBreakdown
 from services.tax_client import TaxServiceClient
 from utils.csv_util import stream_csv
 
 
-async def process_order(order : Order):
+async def process_order(order : OrderCreate):
     tax_service_request : dict =  {
         "longitude": order.longitude,
         "latitude": order.latitude,
@@ -16,11 +16,10 @@ async def process_order(order : Order):
     order.composite_tax_rate = response.composite_tax_rate
     order.tax_amount = response.tax_amount
     order.total_amount = response.total_amount
-    order.breakdown = TaxBreakdown(**response.breakdown.model_dump(), jurisdictions=response.jurisdictions)
-    #TODO зберігати в бдшку дані про замовлення та відповідь від сервісу
+    order.breakdown = TaxBreakdown(**response.breakdown.model_dump())
     return order
 
-async def process_orders(orders : list[Order]):
+async def process_orders(orders : list[OrderCreate]):
     requests = list()
 
     for order in orders:
@@ -37,7 +36,7 @@ async def process_orders(orders : list[Order]):
         orders[i].composite_tax_rate = response.composite_tax_rate
         orders[i].tax_amount = response.tax_amount
         orders[i].total_amount = response.total_amount
-        orders[i].breakdown = TaxBreakdown(**response.breakdown.model_dump(), jurisdictions=response.jurisdictions)
+        orders[i].breakdown = TaxBreakdown(**response.breakdown.model_dump())
     #TODO зберігати в бдшку дані про замовлення та відповідь від сервісу
     return orders
 
@@ -48,7 +47,7 @@ async def import_csv(csv_file: UploadFile, encoding: str = "utf-8"):
 
     for row in stream_csv(csv_file, encoding):
         try:
-            order = Order(**row)
+            order = OrderCreate(**row)
             orders.append(order)
 
             if len(orders) >= 1000:
