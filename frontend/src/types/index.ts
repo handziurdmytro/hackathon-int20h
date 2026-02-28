@@ -7,7 +7,7 @@ export interface TaxBreakdown {
 }
 
 export interface Order {
-  id: number;
+  id?: number;
   longitude: number;
   latitude: number;
   subtotal: number;

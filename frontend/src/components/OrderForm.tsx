@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { api } from "../api";
+import type { Order } from "../types";
 import "../styles/OrderForm.scss";
 
 interface Props {
-  onOrderCreated: () => void;
+  onOrderCreated: (order: Order) => void;
 }
 
 export const OrderForm = ({ onOrderCreated }: Props) => {
@@ -16,12 +17,12 @@ export const OrderForm = ({ onOrderCreated }: Props) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.createOrder({
+      const response = await api.createOrder({
         longitude: formData.longitude,
         latitude: formData.latitude,
         subtotal: formData.subtotal,
       });
-      onOrderCreated();
+      onOrderCreated(response.data);
       alert("Order created!");
     } catch (err) {
       console.error(err);

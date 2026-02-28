@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Order } from './types';
+import type {Order} from './types';
 
 const API_URL = '';
 
@@ -16,8 +16,6 @@ export const api = {
     // Створюємо об'єкт, що відповідає Pydantic моделі Order
     const payload = {
       ...data,
-      id: Math.floor(Math.random() * 100000), // Тимчасовий ID для валідації
-      timestamp: new Date().toISOString()
     };
     return axios.post(`${API_URL}/orders`, payload);
   },

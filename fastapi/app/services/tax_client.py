@@ -22,7 +22,6 @@ class TaxServiceClient:
             return TaxServiceResponse(**response.json())
         except httpx.HTTPStatusError as e:
             if e.response.status_code == 422:
-                # Location outside NY, return default response
                 return TaxServiceResponse(
                     composite_tax_rate=0.0,
                     tax_amount=0.0,

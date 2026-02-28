@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { api } from "./api";
 import type { Order } from "./types";
 import { OrdersTable } from "./components/OrdersTable";
@@ -20,19 +20,19 @@ function App() {
     }
   }, []);
 
-  useEffect(() => {
-    fetchOrders();
-  }, [fetchOrders]);
-
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
-      await api.uploadCsv(file);
-      fetchOrders();
+      const response = await api.uploadCsv(file);
+      setOrders(prev => [...prev, ...response.data.orders]);
     } catch {
       alert("Upload failed");
     }
+  };
+
+  const handleOrderCreated = (order: Order) => {
+    setOrders(prev => [...prev, order]);
   };
 
   return (
@@ -57,10 +57,13 @@ function App() {
         </div>
       </header>
 
-      <OrderForm onOrderCreated={() => void fetchOrders()} />
+      <OrderForm onOrderCreated={handleOrderCreated} />
 
       <section className="card">
         <h3 className="card__title">Processed Orders List</h3>
+        <button onClick={fetchOrders} className="btn" style={{ marginBottom: '1rem' }}>
+          Load All Orders
+        </button>
         <OrdersTable orders={orders} isLoading={isLoading} />
       </section>
     </div>

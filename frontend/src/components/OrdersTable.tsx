@@ -24,9 +24,9 @@ export const OrdersTable = ({ orders, isLoading }: Props) => (
         {isLoading
           ? // Показуємо 5 скелетонів під час завантаження
             [...Array(5)].map((_, i) => <SkeletonRow key={i} />)
-          : orders.map((o) => (
-              <tr key={o.id} className="orders-table__row">
-                <td className="orders-table__cell">{o.id}</td>
+          : orders.map((o, index) => (
+              <tr key={o.id ?? index} className="orders-table__row">
+                <td className="orders-table__cell">{o.id ?? 'N/A'}</td>
                 <td className="orders-table__cell">
                   {o.latitude.toFixed(3)}, {o.longitude.toFixed(3)}
                 </td>
@@ -41,7 +41,8 @@ export const OrdersTable = ({ orders, isLoading }: Props) => (
                   <strong>${o.total_amount?.toFixed(2)}</strong>
                 </td>
                 <td className="orders-table__cell">
-                  <small title={o.breakdown?.jurisdictions.join(", ")}>
+                  <small>
+                    {o.breakdown?.jurisdictions.join(", ")}<br />
                     {o.breakdown?.state_rate} / {o.breakdown?.county_rate} /
                     {o.breakdown?.city_rate} / {o.breakdown?.special_rates}
                   </small>

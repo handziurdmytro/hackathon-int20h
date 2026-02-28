@@ -1,5 +1,5 @@
 from fastapi import UploadFile
-from schemas.request_models import Order, TaxRequest
+from schemas.request_models import Order, TaxRequest, TaxBreakdown
 from services.tax_client import TaxServiceClient
 from utils.csv_util import stream_csv
 
@@ -13,8 +13,13 @@ async def process_order(order : Order):
 
     tax_client = TaxServiceClient(url="http://localhost:3030") #TODO port config file
     response = await tax_client.get_tax_response(TaxRequest(**tax_service_request))
+    # Update the order with tax data
+    order.composite_tax_rate = response.composite_tax_rate
+    order.tax_amount = response.tax_amount
+    order.total_amount = response.total_amount
+    order.breakdown = TaxBreakdown(**response.breakdown.model_dump(), jurisdictions=response.jurisdictions)
     #TODO зберігати в бдшку дані про замовлення та відповідь від сервісу
-    return response
+    return order
 
 async def process_orders(orders : list[Order]):
     requests = list()
